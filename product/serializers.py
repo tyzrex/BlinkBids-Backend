@@ -11,3 +11,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         exclude = ['images']
+
+class ProductUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = "__all__"
