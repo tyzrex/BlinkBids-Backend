@@ -12,6 +12,7 @@ from .serializers import (
 )
 import os
 
+
 def upload_images(images,product_id):
     if not os.path.exists(f"media/{product_id}"):
         os.makedirs(f"media/{product_id}")
@@ -70,3 +71,16 @@ class CategoryUpdate(UpdateAPIView):
 
 class CategoryDelete(DestroyAPIView):
     queryset = Category.objects.all()
+
+# Product filter
+
+# class ProductFilter(APIView):
+#     def get(self, request):
+#         category = self.request.query_params.get("name", None)
+#         if category:
+#             queryset = Product.objects.filter(category__name=category)
+#         else:
+#             queryset = Product.objects.all()
+#         serializer = ProductSerializer(queryset, many=True)
+            
+#         return Response({"count": len(serializer.data), 'data': serializer.data})  

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "product",
     "account",
+    "carts",
     "djoser",
     "rest_framework_simplejwt",
     "django.contrib.admin",
