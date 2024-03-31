@@ -5,6 +5,8 @@ from .models import Cart, CartItems
 from .serializers import CartItemsSerializer
 from product.models import Product
 from account.models import User
+from .models import Order, OrderItem
+from .serializers import OrderSerializer
 
 
 class AddToCartView(APIView):
@@ -29,7 +31,33 @@ class AddToCartView(APIView):
             cart=cart, product=product, user=user
         )
 
-        if item_created:
-            return Response("Product added to cart", status=status.HTTP_200_OK)
-        else:
-            return Response("Product already exists in cart", status=status.HTTP_200_OK)
+        if not item_created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        return Response("Product added to cart", status=status.HTTP_200_OK)
+    
+class CheckoutView(APIView):
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        if not user.is_authenticated:
+            return Response("You are not logged in", status=status.HTTP_403_FORBIDDEN)
+
+        cart_items = CartItems.objects.filter(cart__user=user)
+        if not cart_items:
+            return Response("Your cart is empty", status=status.HTTP_400_BAD_REQUEST)
+
+        total_price = sum(item.product.price * item.quantity for item in cart_items)
+        order = Order.objects.create(user=user, total_price=total_price)
+
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                price=cart_item.product.price * cart_item.quantity,
+            )
+            cart_item.delete()
+
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
