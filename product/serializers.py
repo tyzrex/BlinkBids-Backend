@@ -8,12 +8,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category_name = serializers.CharField(source="category.name", read_only=True)
+
     class Meta:
         model = Product
         fields = "__all__"
 
 class ProductCreateSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source="category.name")
+
     class Meta:
         model = Product
         exclude = ['images']

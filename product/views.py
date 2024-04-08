@@ -11,6 +11,7 @@ from .serializers import (
 
 )
 import os
+from django.shortcuts import get_object_or_404
 
 
 def upload_images(images,product_id):
@@ -27,8 +28,15 @@ def upload_images(images,product_id):
 
 
 class ProductList(ListAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        category_name = self.request.query_params.get("category")
+        if category_name:
+            category = get_object_or_404(Category, name=category_name)
+            return Product.objects.filter(category=category)
+        return Product.objects.all()
+
 
 class ProductCreate(APIView):
     queryset = Product.objects.all()
