@@ -34,31 +34,31 @@ class AddToCartView(APIView):
         return Response("Product added to cart", status=status.HTTP_200_OK)
     
 
-# class RemoveFromCartView(APIView):
-#     def delete(self, request, *args, **kwargs):
-#         user = self.request.user
-#         if not user.is_authenticated:
-#             return Response("You are not logged in", status=status.HTTP_403_FORBIDDEN)
+class RemoveFromCartView(APIView):
+    def delete(self, request, *args, **kwargs):
+        user = self.request.user
+        if not user.is_authenticated:
+            return Response("You are not logged in", status=status.HTTP_403_FORBIDDEN)
 
-#         product_id = request.data.get("product_id")
-#         if not product_id:
-#             return Response(
-#                 "Product ID is required", status=status.HTTP_400_BAD_REQUEST
-#             )
+        product_id = request.data.get("product_id")
+        if not product_id:
+            return Response(
+                "Product ID is required", status=status.HTTP_400_BAD_REQUEST
+            )
 
-#         try:
-#             product = Product.objects.get(pk=product_id)
-#         except Product.DoesNotExist:
-#             return Response("Product not found", status=status.HTTP_404_NOT_FOUND)
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            return Response("Product not found", status=status.HTTP_404_NOT_FOUND)
 
-#         cart_item = CartItems.objects.filter(cart__user=user, product=product).first()
-#         if not cart_item:
-#             return Response(
-#                 "Product not found in your cart", status=status.HTTP_404_NOT_FOUND
-#             )
+        cart_item = CartItems.objects.filter(cart__user=user, product=product).first()
+        if not cart_item:
+            return Response(
+                "Product not found in your cart", status=status.HTTP_404_NOT_FOUND
+            )
 
-#         cart_item.delete()
-#         return Response("Product removed from cart", status=status.HTTP_200_OK)
+        cart_item.delete()
+        return Response("Product removed from cart", status=status.HTTP_200_OK)
     
 class UpdateCartItemView(APIView):
     def patch(self, request, *args, **kwargs):
