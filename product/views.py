@@ -12,6 +12,7 @@ from .serializers import (
 )
 import os
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 
 
 def upload_images(images,product_id):
@@ -26,9 +27,16 @@ def upload_images(images,product_id):
                 f.write(chunk)
     return image_names
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 100
 
+
+# Product CRUD
 class ProductList(ListAPIView):
     serializer_class = ProductSerializer
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         category_name = self.request.query_params.get("category")
