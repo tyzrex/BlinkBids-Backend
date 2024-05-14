@@ -13,6 +13,7 @@ from .serializers import (
 import os
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.exceptions import ValidationError
 
 
 def upload_images(images,product_id):
@@ -53,13 +54,24 @@ class ProductCreate(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         images = request.FILES.getlist("new_images", [])
+        
+        category_name = data.get("category_name")
+
+        try:
+            category = Category.objects.get(name=category_name)
+        except Category.DoesNotExist:
+            raise ValidationError(
+                f"Category with name '{category_name}' does not exist."
+            )
+        data["category"] = category.id
+
         serializer = ProductCreateSerializer(data=data)
         if serializer.is_valid():
-            product = Product(**serializer.validated_data)
+            product = serializer.save()
             
-            image_names = upload_images(images,product.id)
-            product.images = image_names
-            product.save()
+            image_names = upload_images(images, product.id)
+            product.images.clear()
+            product.images.set(image_names)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

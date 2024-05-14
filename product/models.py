@@ -12,11 +12,22 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, null=True, blank=True)
     description = models.TextField()
     price = models.IntegerField()
-    images = ArrayField(models.ImageField(null=True, blank=True, upload_to= "images/"), null = True, blank = True)
+    images = models.ManyToManyField("ProductImage", related_name="products")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=True, null=False)
 
     def __str__(self):
         return self.title
+    
+class ProductImage(models.Model):
+    name = models.CharField(max_length=100)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="product_images"
+    )
+    image = models.ImageField(upload_to='products/image')
+
+    def __str__(self):
+        return self.product.title
 
