@@ -5,7 +5,7 @@ from .models import  Cart, CartItems, Order, OrderItem
 
 admin.site.register(CartItems)
 admin.site.register(OrderItem)
-admin.site.register(Cart)
+
 
 # @admin.register(Order)
 # class OrderAdmin(admin.ModelAdmin):
@@ -26,3 +26,14 @@ class OrderAdmin(admin.ModelAdmin):
     get_order_items.short_description = 'Order Items'
 
 admin.site.register(Order,OrderAdmin)
+
+
+class CartAdmin(admin.ModelAdmin):
+    readonly_fields = ['get_cart_items']
+
+    def get_cart_items(self, obj):
+        cart_items = obj.cart_items.all()
+        return "\n".join([f"{item.product.title} - Quantity: {item.quantity}" for item in cart_items])
+    get_cart_items.short_description = 'Cart Items'
+
+admin.site.register(Cart,CartAdmin)
