@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -52,6 +52,7 @@ class ProductList(ListAPIView):
         return context
     
 
+
 class ProductCreate(APIView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
@@ -88,6 +89,11 @@ class ProductUpdate(UpdateAPIView):
 
 class ProductDelete(DestroyAPIView):
     queryset = Product.objects.all()
+
+class ProductDetail(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'slug'
 
 #Category CRUD
 class CategoryList(ListAPIView):
