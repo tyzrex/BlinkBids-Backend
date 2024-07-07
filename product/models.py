@@ -15,8 +15,8 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, null=True, blank=True)
     description = models.TextField()
     price = models.IntegerField()
-    images = models.ManyToManyField("ProductImage", related_name="products")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=True, null=False)
+    images = models.ManyToManyField("ProductImage", related_name="product_images")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=True, null=False,related_name="category_products")
 
     def __str__(self):
         return self.title

@@ -36,10 +36,27 @@ class CustomPagination(PageNumberPagination):
 
 class HomepageProducts(ListAPIView):
     serializer_class = HomePageCategorySerializer
-    
+
     def get_queryset(self):
-        
-        return Category.objects.all()[:5]
+        # Get the last 5 categories
+        last_categories = Category.objects.order_by('-id')[:5]
+
+        # Prepare data structure to hold categories and their products
+        categories_data = []
+
+        for category in last_categories:
+            category_data = CategorySerializer(category).data
+            products = Product.objects.filter(category=category)[:5]
+            products_data = ProductSerializer(products, many=True).data
+            category_data['category_products'] = products_data
+            categories_data.append(category_data)
+
+        return categories_data
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        return Response(queryset)
+
 
 # Product CRUD
 class ProductList(ListAPIView):
