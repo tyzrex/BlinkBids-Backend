@@ -39,6 +39,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "rest_framework",
     "product",
     "account",
@@ -150,7 +151,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
+    "PAGE_SIZE": 15,
 }
+
+
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT","Bearer"),

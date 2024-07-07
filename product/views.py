@@ -8,14 +8,15 @@ from .serializers import (
     ProductCreateSerializer,
     ProductUpdateSerializer,
     CategorySerializer,
-    HomePageCategorySerializer
+    HomePageCategorySerializer,
+    ProductSearchSerializer
 
 )
 import os
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
-
+from rest_framework.pagination import PageNumberPagination
 
 def upload_images(images,product_id):
     if not os.path.exists(f"media/{product_id}"):
@@ -39,14 +40,14 @@ class HomepageProducts(ListAPIView):
 
     def get_queryset(self):
         # Get the last 5 categories
-        last_categories = Category.objects.order_by('-id')[:5]
+        last_categories = Category.objects.order_by('-id')[:8]
 
         # Prepare data structure to hold categories and their products
         categories_data = []
 
         for category in last_categories:
             category_data = CategorySerializer(category).data
-            products = Product.objects.filter(category=category)[:5]
+            products = Product.objects.filter(category=category)[:10]
             products_data = ProductSerializer(products, many=True).data
             category_data['category_products'] = products_data
             categories_data.append(category_data)
@@ -119,6 +120,17 @@ class ProductDetail(RetrieveAPIView):
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
+class ProductSearch(ListAPIView):
+    serializer_class = ProductSearchSerializer
+    pagination_class = PageNumberPagination
+    def get_queryset(self):
+        search = self.request.query_params.get("query", None)
+        if search:
+            queryset = Product.objects.filter(title__icontains=search)
+        else:
+            queryset = Product.objects.all()
+       
+        return queryset
 #Category CRUD
 class CategoryList(ListAPIView):
     queryset = Category.objects.all()

@@ -52,3 +52,8 @@ class HomePageCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name', 'products')
+
+class ProductSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('id', 'title', 'slug', 'description', 'price', 'images')

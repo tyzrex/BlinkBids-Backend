@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import ProductList, ProductCreate, ProductUpdate, ProductDelete, CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete,ProductDetail,HomepageProducts
+from .views import ProductList, ProductCreate, ProductUpdate, ProductDelete, CategoryList, CategoryCreate, CategoryUpdate, CategoryDelete,ProductDetail,HomepageProducts, ProductSearch
 
 
 urlpatterns = [
     path("homepage/",HomepageProducts.as_view(),name="homepage-products"),
+    path("search/",ProductSearch.as_view(),name="product-search"),
     path("all/", ProductList.as_view(), name="product-list"),
     path("create/", ProductCreate.as_view(), name="product-create"),
     path("update/<str:pk>/", ProductUpdate.as_view(), name="product-update"),
