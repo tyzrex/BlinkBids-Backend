@@ -27,7 +27,9 @@ class CartItems(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    payment_method = models.CharField(max_length=50)
+    is_paid = models.BooleanField(default=False)
+    
     @property
     def total_price(self):
         return sum(item.total_price for item in self.order_items.all())

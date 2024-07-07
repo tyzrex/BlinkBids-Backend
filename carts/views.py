@@ -7,7 +7,7 @@ from product.models import Product
 from account.models import User
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
-
+from rest_framework.generics import ListAPIView
 
 class AddToCartView(APIView):
     def patch(self, request, *args, **kwargs):
@@ -128,3 +128,13 @@ class CheckoutView(APIView):
 
         serializer = OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+
+class GetUserOrders(ListAPIView):
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        queryset = Order.objects.filter(user_id=self.request.user.id)
+
+        return queryset

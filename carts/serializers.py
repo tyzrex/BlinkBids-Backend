@@ -27,7 +27,14 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
-
+    total_price = serializers.SerializerMethodField()
+    items_list = serializers.SerializerMethodField()
     class Meta:
         model = Order
         fields = '__all__'
+
+    def get_total_price(self, obj):
+        return obj.total_price
+    
+    def get_items_list(self, obj):
+        return [item.product.title for item in obj.order_items.all()]
