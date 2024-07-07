@@ -17,6 +17,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
+from BlinkBids.pagination import PageNumberPaginationWithCount
 
 def upload_images(images,product_id):
     if not os.path.exists(f"media/{product_id}"):
@@ -122,7 +123,7 @@ class ProductDetail(RetrieveAPIView):
 
 class ProductSearch(ListAPIView):
     serializer_class = ProductSearchSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = PageNumberPaginationWithCount
     def get_queryset(self):
         search = self.request.query_params.get("query", None)
         if search:
@@ -135,6 +136,7 @@ class ProductSearch(ListAPIView):
 class CategoryList(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    pagination_class = PageNumberPaginationWithCount
 
 class CategoryCreate(CreateAPIView):
     queryset = Category.objects.all()
