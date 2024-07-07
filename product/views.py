@@ -7,7 +7,8 @@ from .serializers import (
     ProductSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
-    CategorySerializer
+    CategorySerializer,
+    HomePageCategorySerializer
 
 )
 import os
@@ -33,6 +34,12 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = "page_size"
     max_page_size = 100
 
+class HomepageProducts(ListAPIView):
+    serializer_class = HomePageCategorySerializer
+    
+    def get_queryset(self):
+        
+        return Category.objects.all()[:5]
 
 # Product CRUD
 class ProductList(ListAPIView):

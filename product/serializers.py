@@ -39,3 +39,16 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class HomePageProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('id', 'title', 'slug', 'description', 'price', 'images')
+
+class HomePageCategorySerializer(serializers.ModelSerializer):
+    products = HomePageProductSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'products')

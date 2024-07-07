@@ -39,8 +39,9 @@ class RemoveFromCartView(APIView):
         user = self.request.user
         if not user.is_authenticated:
             return Response("You are not logged in", status=status.HTTP_403_FORBIDDEN)
-
+        
         product_id = request.data.get("product_id")
+        print(product_id)
         if not product_id:
             return Response(
                 "Product ID is required", status=status.HTTP_400_BAD_REQUEST
@@ -51,7 +52,11 @@ class RemoveFromCartView(APIView):
         except Product.DoesNotExist:
             return Response("Product not found", status=status.HTTP_404_NOT_FOUND)
 
-        cart_item = CartItems.objects.filter(cart__user=user, product=product).first()
+        
+        print(product)
+        cart_item = CartItems.objects.filter(id = product_id).first()
+       
+        
         if not cart_item:
             return Response(
                 "Product not found in your cart", status=status.HTTP_404_NOT_FOUND
@@ -99,8 +104,9 @@ class CartDetailView(APIView):
         if not user.is_authenticated:
             return Response("You are not logged in", status=status.HTTP_403_FORBIDDEN)
 
-        cart_items = CartItems.objects.filter(cart__user=user)
+        cart_items = CartItems.objects.filter(user=user)
         serializer = CartItemsSerializer(cart_items, many=True)
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
