@@ -46,6 +46,11 @@ class ProductList(ListAPIView):
             return Product.objects.filter(category=category)
         return Product.objects.all()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
 
 class ProductCreate(APIView):
     queryset = Product.objects.all()
