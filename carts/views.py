@@ -114,15 +114,15 @@ class CheckoutView(APIView):
         if not cart_items:
             return Response("Your cart is empty", status=status.HTTP_400_BAD_REQUEST)
 
-        total_price = sum(item.product.price * item.quantity for item in cart_items)
-        order = Order.objects.create(user=user, total_price=total_price)
+        
+        order = Order.objects.create(user=user)
 
         for cart_item in cart_items:
             OrderItem.objects.create(
                 order=order,
                 product=cart_item.product,
                 quantity=cart_item.quantity,
-                price=cart_item.product.price * cart_item.quantity,
+                
             )
             cart_item.delete()
 
