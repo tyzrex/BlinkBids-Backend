@@ -4,10 +4,13 @@ from .models import Cart, CartItems, Order, OrderItem
 
 class CartItemsSerializer(serializers.ModelSerializer):
     product = serializers.CharField()
+    price = serializers.SerializerMethodField()
     class Meta:
         model = CartItems
         fields = '__all__'
 
+    def get_price(self, obj):
+        return obj.product.price
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemsSerializer(many=True, read_only=True)
