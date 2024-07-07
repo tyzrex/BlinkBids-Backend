@@ -25,7 +25,7 @@ def get_user_from_jwt(request):
     user_queryset = CustomUser.objects.filter(id=token_obj["user_id"])
     if not user_queryset.exists():
         return Response(status=HTTP_400_BAD_REQUEST)
-    user = user_queryset.values("name", "email").first()
+    user = user_queryset.values("first_name", "email").first()
     serializer = UserLoginSerializer(user)
 
     return Response(serializer.data, status=HTTP_200_OK)
