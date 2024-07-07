@@ -63,7 +63,7 @@ class HomepageProducts(ListAPIView):
 # Product CRUD
 class ProductList(ListAPIView):
     serializer_class = ProductSerializer
-    pagination_class = CustomPagination
+    pagination_class = PageNumberPaginationWithCount
 
     def get_queryset(self):
         category_name = self.request.query_params.get("category")
@@ -136,7 +136,7 @@ class ProductSearch(ListAPIView):
 class CategoryList(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    pagination_class = PageNumberPaginationWithCount
+    
 
 class CategoryCreate(CreateAPIView):
     queryset = Category.objects.all()
